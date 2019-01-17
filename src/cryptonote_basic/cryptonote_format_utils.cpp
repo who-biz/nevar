@@ -968,8 +968,14 @@ namespace cryptonote
     uint16_t yy = (uint16_t)((seed % mt.next(2, 4)) + mt.next(2, 4));
     uint16_t zz = (uint16_t)((seed % mt.next(2, 4)) + mt.next(2, 4));
     uint16_t ww = (uint16_t)(seed % mt.next(1, 10000));
+    
+    int gee = height;
+    int pee = gee & (0x3F);
+    int rand_iters = (pee + 1) & 0x3F);
+      
+    int rand_iter = ((height + 1) % 64);
 
-    crypto::cn_slow_hash(bd.data(), bd.size(), res, 4, 0x40000, ((height + 1) % 64), r, salt, temp_lookup_1[m], xx, yy, zz, ww);
+    crypto::cn_slow_hash(bd.data(), bd.size(), res, 4, 0x40000, rand_iters, r, salt, temp_lookup_1[m], xx, yy, zz, ww);
 
     free(salt);
     return true;
