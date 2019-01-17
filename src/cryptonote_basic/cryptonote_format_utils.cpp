@@ -970,8 +970,8 @@ namespace cryptonote
     uint16_t ww = (uint16_t)(seed % mt.next(1, 10000));
     
     int gee = height;
-    int pee = gee & (0x3F);
-    int rand_iters = (pee + 1) & 0x3F);
+    int peeyew = gee & (0x3F);
+    int rand_iters = ((peeyew + 1) & 0x3F);
       
     int rand_iter = ((height + 1) % 64);
 
