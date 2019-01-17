@@ -15,12 +15,7 @@ See [LICENSE](LICENSE).
 
 ## Where to get help
 
-Discord is the preferred method of communication for NERVA
+Here :)
 
-[Discord](https://discord.gg/jsdbEns)
-
-## Compiling NERVA from source
-
-[Building the NERVA CLI tools](https://bitbucket.org/snippets/nerva-project/kejLB4/building-the-nerva-cli-tools): To build and run the CLI tools
-
-[NERVA CLI: Getting Started](https://bitbucket.org/snippets/nerva-project/KeLrBy/nerva-cli-getting-started): To get the basics on how to create a wallet and mine NERVA, along with some useful information on common commands
+## Compiling NEVAR from source
+Just run `mkdir build && cd build && cmake ..`
