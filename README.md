@@ -18,4 +18,4 @@ See [LICENSE](LICENSE).
 Here :)
 
 ## Compiling NEVAR from source
-Just run `mkdir build && cd build && cmake ..`
+Just run `mkdir build && cd build && cmake .. && make`
