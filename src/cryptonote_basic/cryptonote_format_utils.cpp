@@ -149,6 +149,16 @@ namespace cryptonote
     return true;
   }
   //---------------------------------------------------------------
+uint32_t mod3( uint32_t a ) {
+    a = (a >> 16) + (a & 0xFFFF);
+    a = (a >>  8) + (a & 0xFF);
+    a = (a >>  4) + (a & 0xF);
+    a = (a >>  2) + (a & 0x3);
+    a = (a >>  2) + (a & 0x3);
+    a = (a >>  2) + (a & 0x3);
+    if (a > 2) a = a - 3;
+    return a;
+}  //---------------------------------------------------------------
   bool parse_and_validate_tx_from_blob(const blobdata& tx_blob, transaction& tx, crypto::hash& tx_hash, crypto::hash& tx_prefix_hash)
   {
     std::stringstream ss;
@@ -650,18 +660,6 @@ namespace cryptonote
     cn_fast_hash(blob.data(), blob.size(), res);
   }
   //---------------------------------------------------------------
-  uint32_t mod3( uint32_t a ) {
-    a = ((a >> 2) & 0x33333333) + (a & 0x33333333);
-    a = ((a >> 4) & 0x07070707) + (a & 0x07070707);
-    a = ((a >> 8) & 0x000F000F) + (a & 0x000F000F);
-    a = ((a >> 16)            ) + (a & 0x0000001F);
-    a = ((a >> 2) & 0x33333333) + (a & 0x33333333);
-    a = ((a >> 4)             ) + (a & 0x07070707);
-    a = ((a >> 2)             ) + (a & 0x33333333);
-    if (a > 2) a = a - 3;
-    return a;
-  }
-  //---------------------------------------------------------------
   void set_default_decimal_point(unsigned int decimal_point)
   {
     switch (decimal_point)
@@ -973,7 +971,7 @@ namespace cryptonote
     angrywasp::mersenne_twister mt(seed);
 
     for (int i = 0; i < 3; i++)
-      temp_lookup_1[i] = lookup[mt.generate_uint() % 3];
+      temp_lookup_1[i] = lookup[mod3(mt.generate_uint())];
 
     uint16_t xx = (uint16_t)((seed % mt.next(2, 4)) + mt.next(2, 4));
     uint16_t yy = (uint16_t)((seed % mt.next(2, 4)) + mt.next(2, 4));
@@ -982,137 +980,7 @@ namespace cryptonote
 
     uint32_t gee = height;
     int peeyew = (gee & 0x3F);
-    int rand_iters = 0;
-
-    switch (peeyew)
-    {
-      case 0:
-         rand_iters = 1; break;
-      case 1:
-         rand_iters = 2; break;
-      case 2:
-         rand_iters = 3; break;
-      case 3:
-         rand_iters = 4; break;
-      case 4:
-         rand_iters = 5; break;
-      case 5:
-         rand_iters = 6; break;
-      case 6:
-         rand_iters = 7; break;
-      case 7:
-         rand_iters = 8; break;
-      case 8:
-         rand_iters = 9; break;
-      case 9:
-         rand_iters = 10; break;
-      case 10:
-         rand_iters = 11; break;
-      case 11:
-         rand_iters = 12; break;
-      case 12:
-         rand_iters = 13; break;
-      case 13:
-         rand_iters = 14; break;
-      case 14:
-         rand_iters = 15; break;
-      case 15:
-         rand_iters = 16; break;
-      case 16:
-         rand_iters = 17; break;
-      case 17:
-         rand_iters = 18; break;
-      case 18:
-         rand_iters = 19; break;
-      case 19:
-         rand_iters = 20; break;
-      case 20:
-         rand_iters = 21; break;
-      case 21:
-         rand_iters = 22; break;
-      case 22:
-         rand_iters = 23; break;
-      case 23:
-         rand_iters = 24; break;
-      case 24:
-         rand_iters = 25; break;
-      case 25:
-         rand_iters = 26; break;
-      case 26:
-         rand_iters = 27; break;
-      case 27:
-         rand_iters = 28; break;
-      case 28:
-         rand_iters = 29; break;
-      case 29:
-         rand_iters = 30; break;
-      case 30:
-         rand_iters = 31; break;
-      case 31:
-         rand_iters = 32; break;
-      case 32:
-         rand_iters = 33; break;
-      case 33:
-         rand_iters = 34; break;
-      case 34:
-         rand_iters = 35; break;
-      case 35:
-         rand_iters = 36; break;
-      case 36:
-         rand_iters = 37; break;
-      case 37:
-         rand_iters = 38; break;
-      case 38:
-         rand_iters = 39; break;
-      case 39:
-         rand_iters = 40; break;
-      case 40:
-         rand_iters = 41; break;
-      case 41:
-         rand_iters = 42; break;
-      case 42:
-         rand_iters = 43; break;
-      case 43:
-         rand_iters = 44; break;
-      case 44:
-         rand_iters = 45; break;
-      case 45:
-         rand_iters = 46; break;
-      case 46:
-         rand_iters = 47; break;
-      case 47:
-         rand_iters = 48; break;
-      case 48:
-         rand_iters = 49; break;
-      case 49:
-         rand_iters = 50; break;
-      case 50:
-         rand_iters = 51; break;
-      case 51:
-         rand_iters = 52; break;
-      case 52:
-         rand_iters = 53; break;
-      case 53:
-         rand_iters = 54; break;
-      case 54:
-         rand_iters = 55; break;
-      case 55:
-         rand_iters = 56; break;
-      case 56:
-         rand_iters = 57; break;
-      case 57:
-         rand_iters = 58; break;
-      case 58:
-         rand_iters = 59; break;
-      case 59:
-         rand_iters = 60; break;
-      case 60:
-         rand_iters = 61; break;
-      case 61:
-         rand_iters = 62; break;
-      case 62:
-         rand_iters = 63; break;
-    }
+    int rand_iters = (peeyew + 1) & 0x3F;
 
     crypto::cn_slow_hash(bd.data(), bd.size(), res, 4, 0x40000, rand_iters, r, salt, temp_lookup_1[m], xx, yy, zz, ww);
 
