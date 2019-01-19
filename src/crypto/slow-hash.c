@@ -169,9 +169,9 @@ extern void aesb_pseudo_round(const uint8_t *in, uint8_t *out, const uint8_t *ex
   _b = _c; \
 
 #define salt_pad(a, b, c, d) \
-extra_hashes[a % 3](sp_bytes, 200, salt_hash); \
+extra_hashes[mod3(a)](sp_bytes, 200, salt_hash); \
 temp_1 = (uint16_t)(rand_iters ^ (b ^ c)); \
-offset_1 = temp_1 * ((d % 3) + 1); \
+offset_1 = temp_1 * ((mod3(d)) + 1); \
 for (j = 0; j < 32; j++) \
     sp_bytes[offset_1 + j] ^= salt_hash[j]; \
 x = 0; \
@@ -779,9 +779,9 @@ union cn_slow_hash_state {
 #pragma pack(pop)
 
 #define salt_pad(a, b, c, d) \
-extra_hashes[a % 3](sp_bytes, 200, salt_hash); \
+extra_hashes[mod3(a)](sp_bytes, 200, salt_hash); \
 temp_1 = (uint16_t)(rand_iters ^ (b ^ c)); \
-offset_1 = temp_1 * ((d % 3) + 1); \
+offset_1 = temp_1 * ((mod3(d)) + 1); \
 for (j = 0; j < 32; j++) \
     sp_bytes[offset_1 + j] ^= salt_hash[j]; \
 x = 0; \
