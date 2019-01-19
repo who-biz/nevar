@@ -175,7 +175,7 @@ offset_1 = temp_1 * ((d % 3) + 1); \
 for (j = 0; j < 32; j++) \
     sp_bytes[offset_1 + j] ^= salt_hash[j]; \
 x = 0; \
-offset_1 = (d % 64) + 1; \
+offset_1 = (d & 0x3F) + 1; \
 offset_2 = ((temp_1 * offset_1) % 125) + 4; \
 for (j = offset_1; j < MEMORY; j += offset_2) \
     hp_state[j] ^= sp_bytes[x++]; \
@@ -785,7 +785,7 @@ offset_1 = temp_1 * ((d % 3) + 1); \
 for (j = 0; j < 32; j++) \
     sp_bytes[offset_1 + j] ^= salt_hash[j]; \
 x = 0; \
-offset_1 = (d % 64) + 1; \
+offset_1 = (d & 0x3F) + 1; \
 offset_2 = ((temp_1 * offset_1) % 125) + 4; \
 for (j = offset_1; j < MEMORY; j += offset_2) \
     long_state[j] ^= sp_bytes[x++]; \
