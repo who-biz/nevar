@@ -650,6 +650,18 @@ namespace cryptonote
     cn_fast_hash(blob.data(), blob.size(), res);
   }
   //---------------------------------------------------------------
+  uint32_t mod3( uint32_t a ) {
+    a = ((a >> 2) & 0x33333333) + (a & 0x33333333);
+    a = ((a >> 4) & 0x07070707) + (a & 0x07070707);
+    a = ((a >> 8) & 0x000F000F) + (a & 0x000F000F);
+    a = ((a >> 16)            ) + (a & 0x0000001F);
+    a = ((a >> 2) & 0x33333333) + (a & 0x33333333);
+    a = ((a >> 4)             ) + (a & 0x07070707);
+    a = ((a >> 2)             ) + (a & 0x33333333);
+    if (a > 2) a = a - 3;
+    return a;
+  }
+  //---------------------------------------------------------------
   void set_default_decimal_point(unsigned int decimal_point)
   {
     switch (decimal_point)
@@ -956,7 +968,7 @@ namespace cryptonote
 
     bc->get_db().get_v3_data(salt, (uint32_t)ht, 4, seed);
 
-    uint32_t m = seed % 3;
+    uint32_t m = mod3(seed);
     uint8_t temp_lookup_1[3];
     angrywasp::mersenne_twister mt(seed);
 
