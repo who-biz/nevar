@@ -913,7 +913,7 @@ uint32_t mod3( uint32_t a ) {
         cn_bytes[i] << 24 | 
         cn_bytes[i + 2] << 16 | 
         cn_bytes[i + 4] << 8 | 
-        cn_bytes[i + 6]) % sp_size; 
+        cn_bytes[i + 6]) & 0xFFFFF; 
 
       r->operators[j] = (cn_bytes[i] ^ cn_bytes[i + 2]) >> 5;
       r->values[j] = cn_bytes[i + 4] ^ cn_bytes[i + 6];
@@ -922,7 +922,7 @@ uint32_t mod3( uint32_t a ) {
         cn_bytes[i + 1] << 24 | 
         cn_bytes[i + 3] << 16 | 
         cn_bytes[i + 5] << 8 | 
-        cn_bytes[i + 7]) % sp_size;
+        cn_bytes[i + 7]) & 0xFFFFF;
     }
   }
 

@@ -130,7 +130,6 @@ static inline uint32_t div128_32(uint64_t dividend_hi, uint64_t dividend_lo, uin
 }
 
 // shortcut for mod 3
-
 static inline uint32_t mod3( uint32_t a ) {
     a = (a >> 16) + (a & 0xFFFF);
     a = (a >>  8) + (a & 0xFF);
@@ -140,7 +139,9 @@ static inline uint32_t mod3( uint32_t a ) {
     a = (a >>  2) + (a & 0x3);
     if (a > 2) a = a - 3;
     return a;
-}
+  }
+
+
 #define IDENT32(x) ((uint32_t) (x))
 #define IDENT64(x) ((uint64_t) (x))
 

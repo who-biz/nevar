@@ -97,10 +97,11 @@ namespace angrywasp
             uint32_t next(uint32_t min, uint32_t max)
             {
                 uint32_t r = generate_uint();
-                double div = (double)(0xffffffff) / (double)(max - min);
-                return (r / div) + min;
+//                double div = (0xffffffff) / (double)(max - min);
+                double den = 0xffffffff;
+                double num = (max - min);
+                return (r * num * 1/den) + min;
             }
-
             void next_bytes(uint8_t* data, uint32_t length)
             {
                 for (uint32_t i = 0; i < length; i++)
