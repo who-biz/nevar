@@ -149,16 +149,6 @@ namespace cryptonote
     return true;
   }
   //---------------------------------------------------------------
-uint32_t mod3( uint32_t a ) {
-    a = (a >> 16) + (a & 0xFFFF);
-    a = (a >>  8) + (a & 0xFF);
-    a = (a >>  4) + (a & 0xF);
-    a = (a >>  2) + (a & 0x3);
-    a = (a >>  2) + (a & 0x3);
-    a = (a >>  2) + (a & 0x3);
-    if (a > 2) a = a - 3;
-    return a;
-}  //---------------------------------------------------------------
   bool parse_and_validate_tx_from_blob(const blobdata& tx_blob, transaction& tx, crypto::hash& tx_hash, crypto::hash& tx_prefix_hash)
   {
     std::stringstream ss;
@@ -909,11 +899,13 @@ uint32_t mod3( uint32_t a ) {
       r->operators[j] = (cn_bytes[i + 1] ^ cn_bytes[i + 3]) >> 5;
       r->values[j] = cn_bytes[i + 5] ^ cn_bytes[i + 7];
 
+      //replacing '% sp_size' with '& 0xFFFFF' here doesn't work as prior to v10 this is not a pow2 number
+      //another "optimization" that breaks the algorithm
       r->indices[j++] = (
         cn_bytes[i] << 24 | 
         cn_bytes[i + 2] << 16 | 
         cn_bytes[i + 4] << 8 | 
-        cn_bytes[i + 6]) & 0xFFFFF; 
+        cn_bytes[i + 6]) % sp_size; 
 
       r->operators[j] = (cn_bytes[i] ^ cn_bytes[i + 2]) >> 5;
       r->values[j] = cn_bytes[i + 4] ^ cn_bytes[i + 6];
@@ -922,7 +914,7 @@ uint32_t mod3( uint32_t a ) {
         cn_bytes[i + 1] << 24 | 
         cn_bytes[i + 3] << 16 | 
         cn_bytes[i + 5] << 8 | 
-        cn_bytes[i + 7]) & 0xFFFFF;
+        cn_bytes[i + 7]) % sp_size;
     }
   }
 
@@ -965,24 +957,23 @@ uint32_t mod3( uint32_t a ) {
       seed ^= *(uint32_t*)&h.data[i];
 
     bc->get_db().get_v3_data(salt, (uint32_t)ht, 4, seed);
-
-    uint32_t m = mod3(seed);
+    //this mod3 function uses more cpu cycles then a % operator
+    //not a valid optimization
+    uint32_t m = seed % 3;
     uint8_t temp_lookup_1[3];
     angrywasp::mersenne_twister mt(seed);
 
     for (int i = 0; i < 3; i++)
-      temp_lookup_1[i] = lookup[mod3(mt.generate_uint())];
+      temp_lookup_1[i] = lookup[mt.generate_uint() % 3];
 
     uint16_t xx = (uint16_t)((seed % mt.next(2, 4)) + mt.next(2, 4));
     uint16_t yy = (uint16_t)((seed % mt.next(2, 4)) + mt.next(2, 4));
     uint16_t zz = (uint16_t)((seed % mt.next(2, 4)) + mt.next(2, 4));
     uint16_t ww = (uint16_t)(seed % mt.next(1, 10000));
 
-    uint32_t gee = height;
-    int peeyew = (gee & 0x3F);
-    int rand_iters = (peeyew + 1) & 0x3F;
-
-    crypto::cn_slow_hash(bd.data(), bd.size(), res, 4, 0x40000, rand_iters, r, salt, temp_lookup_1[m], xx, yy, zz, ww);
+    //although insignificant, the & 0x3F optimization is valid.
+    //Just written in a sloppy fashion
+    crypto::cn_slow_hash(bd.data(), bd.size(), res, 4, 0x40000, ((height + 1) & 0x3F), r, salt, temp_lookup_1[m], xx, yy, zz, ww);
 
     free(salt);
     return true;
